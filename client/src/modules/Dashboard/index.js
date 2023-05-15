@@ -35,13 +35,12 @@ const Dashboard = (props) => {
     socket?.emit("addUser", user?.id);
 
     socket?.on("getUsers", (users) => {
-      console.log("Active Users-->", users);
       let ar = users.map((u) => u.userId);
-      console.log("ARRRR--->", ar);
       setActiveUsers(ar);
     });
 
     socket?.on("getMessage", (data) => {
+      console.log("GET MESSAGES-->", data);
       setMessages((prev) => ({
         ...prev,
         messages: [
@@ -52,30 +51,34 @@ const Dashboard = (props) => {
     });
   }, [socket]);
 
+  //get users list with whom user had conversations
+  const fetchUsersConversations = async (loggedInUser) => {
+    console.log("loggedInUser-->", loggedInUser);
+    const res = await fetch(
+      `http://localhost:9000/api/conversation/user/${loggedInUser?.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let resData = await res.json();
+    resData = resData.filter((ele) => {
+      return ele != null;
+    });
+
+    setConversations(resData);
+  };
+
   useEffect(() => {
     if (location.state && location.state.login) {
       toast.success("Logged in Successfully!");
     }
     const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
-    const fetchConversations = async () => {
-      const res = await fetch(
-        `http://localhost:9000/api/conversation/user/${loggedInUser?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
 
-      let resData = await res.json();
-      resData = resData.filter((ele) => {
-        return ele != null;
-      });
-
-      setConversations(resData);
-    };
-    fetchConversations();
+    fetchUsersConversations(loggedInUser);
   }, []);
 
   useEffect(() => {
@@ -92,27 +95,27 @@ const Dashboard = (props) => {
         return ele != null;
       });
 
-      if (resData && flg == false) {
-        flg = true;
-        setUsers((prev) => {
-          return resData;
-        });
-      }
+      // if (resData && flg == false) {
+      //   flg = true;
+      //   setUsers(resData);
+      // }
+      setUsers(resData);
     };
 
     fetchUsers();
-  }, [users]);
+  }, []);
 
-  const handleConversation = async (e, conversationId, user, id = "") => {
+  const fetchConversations = async (e, conversationId, receiver, id = "") => {
     e && e.preventDefault();
     setConversationId(conversationId);
+    console.log("Receiver-->", receiver);
 
-    if (conversationId == "new") {
-      setReceiverId(id);
-    }
+    // if (conversationId == "new") {
+    //   setReceiverId(id);
+    // }
 
     const resp = await fetch(
-      `http://localhost:9000/api/messages/${conversationId}`,
+      `http://localhost:9000/api/messages/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.id}`,
       {
         method: "GET",
         headers: {
@@ -122,22 +125,26 @@ const Dashboard = (props) => {
     );
 
     let resData = await resp.json();
-    setMessages({ messages: resData, receiver: user });
+    setMessages({ messages: resData, receiver });
   };
 
   const sendMessage = async (e) => {
     e && e.preventDefault();
+    let loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
 
-    if(!messageText){
-      return
+    if (!messageText) {
+      // toast.error("Please enter message");
+      return;
     }
 
     let data = {
       conversationId: conversationId ? conversationId : "",
       senderId: user?.id,
       message: messageText ? messageText : "",
-      receiverId: messages?.receiver?.id || receiverId || "",
+      receiverId: messages?.receiver?.id || "",
     };
+    console.log("messages0-->", messages);
+    console.log("Data-->", data);
 
     //emit message to socket
     socket?.emit("sendMessage", data);
@@ -152,12 +159,21 @@ const Dashboard = (props) => {
 
     const resData = await res.json();
 
+    // setting new conversation Id
+    if(resData && resData.conversationId){
+      setConversationId(resData.conversationId);
+    }
+    console.log("resData--->", resData);
+    if (resData) {
+      fetchUsersConversations(loggedInUser);
+    }
+
     setMessageText("");
   };
 
-  const handleUsers = (e, id, user) => {
-    e && e.preventDefault();
-  };
+  // const handleUsers = (e, id, user) => {
+  //   e && e.preventDefault();
+  // };
 
   const changeTab = (e, tab) => {
     e && e.preventDefault();
@@ -166,17 +182,17 @@ const Dashboard = (props) => {
 
   const convoUsers = conversations.map((c) => c.user?.id);
   convoUsers.push(user.id);
-  const noConvoUsers = users.filter((u) => !convoUsers.includes(u.id));
+  const noConvoUsers = users.filter((u) => user.id !== u.id);
 
   let actUserss = users.filter((u) => activeUsers.includes(u.id));
   // actUserss.push(user.id);
   actUserss = actUserss.filter((u) => u.id != user.id);
 
-  console.log("activeUser--->", activeUsers);
-  console.log("convoUsers->", convoUsers);
-  console.log("noConvoUsers->", noConvoUsers);
-  console.log("actUserss--->", actUserss);
-  console.log("Tab--->", tab);
+  // console.log("activeUser--->", activeUsers);
+  // console.log("convoUsers->", convoUsers);
+  // console.log("noConvoUsers->", noConvoUsers);
+  // console.log("actUserss--->", actUserss);
+  // console.log("Tab--->", tab);
 
   return (
     <div className="w-screen flex">
@@ -215,7 +231,7 @@ const Dashboard = (props) => {
                   <div
                     className="flex items-center py-8 border-b border-b-gray-600"
                     key={conversationId}
-                    onClick={(e) => handleConversation(e, conversationId, user)}
+                    onClick={(e) => fetchConversations(e, conversationId, user)}
                   >
                     <div className="cursor-pointer flex items-center">
                       <div className="border border-primary p-[5px] rounded-full">
@@ -398,7 +414,7 @@ const Dashboard = (props) => {
                   <div
                     className="flex items-center py-8 border-b border-b-gray-600"
                     key={id}
-                    onClick={(e) => handleConversation(e, "new", user, id)}
+                    onClick={(e) => fetchConversations(e, "new", user, id)}
                   >
                     <div className="cursor-pointer flex items-center">
                       <div className="border border-primary p-[5px] rounded-full">
@@ -426,29 +442,26 @@ const Dashboard = (props) => {
           <div>
             {actUserss && actUserss.length ? (
               actUserss.map(({ id, user: actUser }) => {
-                console.log("actUser--->", actUser);
-                console.log("id--->", id);
-                console.log(" user.id--->", user.id);
                 return (
-                    <div
-                      className="flex items-center py-8 border-b border-b-gray-600"
-                      key={id}
-                      onClick={(e) => handleConversation(e, "new", actUser, id)}
-                    >
-                      <div className="cursor-pointer flex items-center">
-                        <div className="border border-primary p-[5px] rounded-full">
-                          <img src={userAvatar} width={40} height={40} />
-                        </div>
-                        <div className="ml-8">
-                          <h3 className="text-lg font-semibold">
-                            {actUser.fullName}
-                          </h3>
-                          <p className="text-sm font-light text-gray-800">
-                            {actUser.email}
-                          </p>
-                        </div>
+                  <div
+                    className="flex items-center py-8 border-b border-b-gray-600"
+                    key={id}
+                    onClick={(e) => fetchConversations(e, "new", actUser, id)}
+                  >
+                    <div className="cursor-pointer flex items-center">
+                      <div className="border border-primary p-[5px] rounded-full">
+                        <img src={userAvatar} width={40} height={40} />
+                      </div>
+                      <div className="ml-8">
+                        <h3 className="text-lg font-semibold">
+                          {actUser.fullName}
+                        </h3>
+                        <p className="text-sm font-light text-gray-800">
+                          {actUser.email}
+                        </p>
                       </div>
                     </div>
+                  </div>
                 );
               })
             ) : (
