@@ -210,7 +210,7 @@ const Dashboard = (props) => {
               </h3>
               <Button
                 // className="text-3xl font-light"
-                className="w-auto ml-10 text-xs bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                className="text-xs text-red-500 w-auto ml-10  bg-transparent hover:bg-red-500 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                 onClick={(e) => {
                   localStorage.removeItem("user:token");
                   window.location.reload(true);
