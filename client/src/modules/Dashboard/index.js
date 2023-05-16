@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import userAvatar from "../../assets/userAvatar.svg";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -20,16 +20,23 @@ const Dashboard = (props) => {
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState({});
   const [messageText, setMessageText] = useState("");
-  const [receiverId, setReceiverId] = useState("");
   const [tab, setTab] = useState("All");
   const [activeUsers, setActiveUsers] = useState([]);
-
   const [socket, setSocket] = useState(null);
+  const messageRef = useRef(null);
 
   useEffect(() => {
     //Socket
     setSocket(io("http://localhost:8080"));
   }, []);
+
+
+  console.log("messages-->",messages)
+
+  useEffect(() => {
+    console.log("REFFFF--->",messageRef);
+    messageRef?.current?.scrollIntoView({ behaviour: "smooth" });
+  }, [messages?.messages]);
 
   useEffect(() => {
     socket?.emit("addUser", user?.id);
@@ -160,7 +167,7 @@ const Dashboard = (props) => {
     const resData = await res.json();
 
     // setting new conversation Id
-    if(resData && resData.conversationId){
+    if (resData && resData.conversationId) {
       setConversationId(resData.conversationId);
     }
     console.log("resData--->", resData);
@@ -195,10 +202,10 @@ const Dashboard = (props) => {
   // console.log("Tab--->", tab);
 
   return (
-    <div className="w-screen flex">
+    <div className="w-screen flex ">
       <ToastContainer />
       {/* left section */}
-      <div className="w-[25%] h-screen bg-secondary">
+      <div className="w-[25%] h-screen bg-secondary overflow-auto overflow-x-hidden">
         <div className="flex items-center my-8 mx-8">
           <div className="border border-primary p-[7px] rounded-full">
             <img src={userAvatar} width={60} height={60} />
@@ -298,7 +305,7 @@ const Dashboard = (props) => {
           className={
             "h-[75%] w-full " +
             (messages?.messages?.length || messages?.receiver?.fullName
-              ? "overflow-scroll overscroll-auto overflow-x-hidden  shadow-sm"
+              ? "overflow-auto overscroll-auto overflow-x-hidden  shadow-sm"
               : "")
           }
         >
@@ -307,24 +314,27 @@ const Dashboard = (props) => {
             {messages?.messages?.length ? (
               messages?.messages.map(({ message, user: { id } = {} }, i) => {
                 return (
-                  <div
-                    className={
-                      "max-w-[40%]  rounded-b-xl p-4 mb-6 " +
-                      (id == user?.id
-                        ? "bg-primary rounded-tl-xl text-white ml-auto"
-                        : " bg-secondary rounded-tr-xl ")
-                    }
-                    key={i}
-                  >
-                    {message}
-                  </div>
+                  <>
+                    <div
+                      className={
+                        "max-w-[40%]  rounded-b-xl p-4 mb-6 " +
+                        (id == user?.id
+                          ? "bg-primary rounded-tl-xl text-white ml-auto"
+                          : " bg-secondary rounded-tr-xl ")
+                      }
+                      key={i}
+                    >
+                      {message}
+                    </div>
+                    <div ref={messageRef}></div>
+                  </>
                 );
               })
             ) : (
               <div className="text-center text-lg font-semibold mt-24">
                 {messages?.messages?.length || messages?.receiver?.fullName
                   ? "No Messages"
-                  : "No Conversations"}
+                  : "No Conversation Selected"}
               </div>
             )}
           </div>
@@ -386,11 +396,11 @@ const Dashboard = (props) => {
         )}
       </div>
       {/* right section */}
-      <div className="w-[25%] h-screen px-8 py-16">
+      <div className="w-[25%] h-screen px-8 py-16 overflow-auto overflow-x-hidden">
         <div className="flex">
           <div
             className={
-              "text-lg " + (tab == "All" ? " text-lime-500" : " text-primary")
+              "text-lg cursor-pointer " + (tab == "All" ? " text-lime-500" : " text-primary")
             }
             onClick={(e) => changeTab(e, "All")}
           >
@@ -398,7 +408,7 @@ const Dashboard = (props) => {
           </div>
           <div
             className={
-              " text-lg ml-5" +
+              " text-lg ml-5 cursor-pointer " +
               (tab == "Active" ? " text-lime-500" : " text-primary")
             }
             onClick={(e) => changeTab(e, "Active")}
@@ -407,7 +417,7 @@ const Dashboard = (props) => {
           </div>
         </div>
         {tab == "All" ? (
-          <div>
+          <div className="">
             {noConvoUsers && noConvoUsers.length ? (
               noConvoUsers.map(({ id, user }) => {
                 return (

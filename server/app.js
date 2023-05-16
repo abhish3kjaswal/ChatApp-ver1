@@ -74,22 +74,37 @@ io.on("connection", (socket) => {
         console.log("NO RECEIVER--------------->>>")
         // socket.emit('addUser',receiverId)
         
-        const user = { userId:receiverId, socketId: socket.id };
-        users.push(user);
-        io.emit("getUsers", users);
-        console.log("userssss------>", users);
+        // 1 way to do this--->
+        // const user = { userId:receiverId, socketId: socket.id };
+        // users.push(user);
+        // io.emit("getUsers", users);
+        // console.log("userssss------>", users);
 
-        const receiver = users.find((u) => u.userId === receiverId);
-        const newUser = await Users.findById(senderId);
+        // const receiver = users.find((u) => u.userId === receiverId);
+        // const newUser = await Users.findById(senderId);
         
-        io.to(receiver.socketId)
-        .to(socket.id)
-        .emit("getMessage", {
+        // io.to(receiver.socketId)
+        // .to(socket.id)
+        // .emit("getMessage", {
+        //   conversationId,
+        //   senderId,
+        //   message,
+        //   receiverId,
+        //   user: { id: newUser._id, fullName: newUser.fullName, email: newUser.email },
+        // });
+
+
+        // another way to do this --->
+        io.to(socket.id).emit("getMessage", {
           conversationId,
           senderId,
           message,
           receiverId,
-          user: { id: newUser._id, fullName: newUser.fullName, email: newUser.email },
+          user: {
+            id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+          },
         });
       }
     }
