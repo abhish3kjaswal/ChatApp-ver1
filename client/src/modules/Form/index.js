@@ -29,7 +29,7 @@ const Form = ({ isSignInPage = false }) => {
   const handleSubmit = async (e) => {
     e && e.preventDefault();
     const res = await fetch(
-      `http://localhost:9000/api/${isSignInPage ? "login" : "register"}`,
+      `${process.env.REACT_APP_API_URL}/api/${isSignInPage ? "login" : "register"}`,
       {
         method: "POST",
         headers: {

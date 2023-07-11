@@ -57,7 +57,7 @@ const Dashboard = (props) => {
   //get users list with whom user had conversations
   const fetchUsersConversations = async (loggedInUser) => {
     const res = await fetch(
-      `http://localhost:9000/api/conversation/user/${loggedInUser?.id}`,
+      `${process.env.REACT_APP_API_URL}/api/conversation/user/${loggedInUser?.id}`,
       {
         method: "GET",
         headers: {
@@ -85,7 +85,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch(`http://localhost:9000/api/users`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const Dashboard = (props) => {
     // }
 
     const resp = await fetch(
-      `http://localhost:9000/api/messages/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.id}`,
+      `${process.env.REACT_APP_API_URL}/api/messages/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.id}`,
       {
         method: "GET",
         headers: {
@@ -147,7 +147,7 @@ const Dashboard = (props) => {
     //emit message to socket
     socket?.emit("sendMessage", data);
 
-    const res = await fetch(`http://localhost:9000/api/message`, {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
