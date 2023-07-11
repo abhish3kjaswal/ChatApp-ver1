@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
-const url =
-  "mongodb+srv://chat_app_admin:admin1234@cluster0.0iis4jm.mongodb.net/ChatApp";
+const url = process.env.MONGO_URL;
 
 const connectDB = async () => {
   try {

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -55,10 +56,6 @@ io.on("connection", (socket) => {
       const receiver = users.find((u) => u.userId === receiverId);
       const user = await Users.findById(senderId);
 
-      console.log("users->", users);
-      console.log("receiver->", receiver);
-      console.log("user->", user);
-
       if (receiver) {
         io.to(receiver.socketId)
           .to(socket.id)
@@ -71,7 +68,6 @@ io.on("connection", (socket) => {
           });
       }
       else{
-        console.log("NO RECEIVER--------------->>>")
         // socket.emit('addUser',receiverId)
         
         // 1 way to do this--->

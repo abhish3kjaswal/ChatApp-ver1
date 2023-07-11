@@ -39,6 +39,7 @@ const Form = ({ isSignInPage = false }) => {
       }
     );
 
+   
     const resData = await res.json();
 
     if (res.status == 400) {

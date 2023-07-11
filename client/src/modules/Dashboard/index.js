@@ -31,10 +31,7 @@ const Dashboard = (props) => {
   }, []);
 
 
-  console.log("messages-->",messages)
-
   useEffect(() => {
-    console.log("REFFFF--->",messageRef);
     messageRef?.current?.scrollIntoView({ behaviour: "smooth" });
   }, [messages?.messages]);
 
@@ -47,7 +44,6 @@ const Dashboard = (props) => {
     });
 
     socket?.on("getMessage", (data) => {
-      console.log("GET MESSAGES-->", data);
       setMessages((prev) => ({
         ...prev,
         messages: [
@@ -60,7 +56,6 @@ const Dashboard = (props) => {
 
   //get users list with whom user had conversations
   const fetchUsersConversations = async (loggedInUser) => {
-    console.log("loggedInUser-->", loggedInUser);
     const res = await fetch(
       `http://localhost:9000/api/conversation/user/${loggedInUser?.id}`,
       {
@@ -115,8 +110,6 @@ const Dashboard = (props) => {
   const fetchConversations = async (e, conversationId, receiver, id = "") => {
     e && e.preventDefault();
     setConversationId(conversationId);
-    console.log("Receiver-->", receiver);
-
     // if (conversationId == "new") {
     //   setReceiverId(id);
     // }
@@ -150,8 +143,6 @@ const Dashboard = (props) => {
       message: messageText ? messageText : "",
       receiverId: messages?.receiver?.id || "",
     };
-    console.log("messages0-->", messages);
-    console.log("Data-->", data);
 
     //emit message to socket
     socket?.emit("sendMessage", data);
@@ -170,7 +161,6 @@ const Dashboard = (props) => {
     if (resData && resData.conversationId) {
       setConversationId(resData.conversationId);
     }
-    console.log("resData--->", resData);
     if (resData) {
       fetchUsersConversations(loggedInUser);
     }
@@ -195,12 +185,6 @@ const Dashboard = (props) => {
   // actUserss.push(user.id);
   actUserss = actUserss.filter((u) => u.id != user.id);
 
-  // console.log("activeUser--->", activeUsers);
-  // console.log("convoUsers->", convoUsers);
-  // console.log("noConvoUsers->", noConvoUsers);
-  // console.log("actUserss--->", actUserss);
-  // console.log("Tab--->", tab);
-
   return (
     <div className="w-screen flex ">
       <ToastContainer />
@@ -217,7 +201,7 @@ const Dashboard = (props) => {
               </h3>
               <Button
                 // className="text-3xl font-light"
-                className="text-xs text-red-500 w-auto ml-10  bg-transparent hover:bg-red-500 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                className="text-xs text-red-500 w-auto ml-10  bg-transparent hover:bg-red-500 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded logOutBtn"
                 onClick={(e) => {
                   localStorage.removeItem("user:token");
                   window.location.reload(true);
@@ -278,7 +262,7 @@ const Dashboard = (props) => {
                 {messages?.receiver?.email ? messages.receiver.email : ""}
               </p>
             </div>
-            <div className="cursor-pointer">
+            {/* <div className="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="icon icon-tabler icon-tabler-phone-incoming"
@@ -296,7 +280,7 @@ const Dashboard = (props) => {
                 <line x1="15" y1="9" x2="20" y2="4" />
                 <polyline points="15 5 15 9 19 9" />
               </svg>
-            </div>
+            </div> */}
           </div>
         ) : (
           ""
