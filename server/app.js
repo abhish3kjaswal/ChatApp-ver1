@@ -26,7 +26,7 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-let port = process.env.port || 9000;
+let port = process.env.PORT || 9000;
 
 
 //Socket setup
