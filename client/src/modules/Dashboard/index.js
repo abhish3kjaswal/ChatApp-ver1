@@ -6,9 +6,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 
+
+//socket io client library
 import { io } from "socket.io-client";
 
-let flg = false;
 const Dashboard = (props) => {
   const location = useLocation();
   const [user, setUser] = useState(
