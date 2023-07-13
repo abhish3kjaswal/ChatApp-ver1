@@ -7,7 +7,8 @@ const mongoose = require("mongoose");
 
 const io = require("socket.io")(8080, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.REACT_SOCKET_URL || "http://localhost:3000",
+    // origin: "http://localhost:3000",
   },
 });
 
@@ -125,7 +126,7 @@ app.get("/", (req, res) => {
 //Register User Api
 app.post("/api/register", async (req, res, next) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, age, gender, phoneNo } = req.body;
     if (!fullName || !email || !password) {
       res.status(400).json({ message: "Please fill required fields" });
     } else {
@@ -136,6 +137,9 @@ app.post("/api/register", async (req, res, next) => {
         const newUser = new Users({
           fullName,
           email,
+          age,
+          gender,
+          phoneNo
         });
 
         bcryptjs.hash(password, 10, (err, hashedPassword) => {
@@ -402,6 +406,25 @@ app.get("/api/users", async (req, res, next) => {
     res.status(200).json(usersData);
   } catch (error) {
     console.log("Err 7->", error);
+  }
+});
+
+app.get("/api/users/:userId", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    console.log("userID-->", userId)
+
+    const userData = await Users.findOne({ _id: userId })
+
+    console.log(userData)
+    
+    // const users = await Users.find();
+    // const usersData = []
+    const { fullName, email,age,gender,phoneNo } = userData
+    res.status(200).json({fullName, email,age,gender,phoneNo});
+  } catch (error) {
+    console.log("Err->", error);
   }
 });
 

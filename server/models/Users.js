@@ -14,6 +14,18 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  age: {
+    type: String,
+    required: false,
+  },
+  gender: {
+    type: String,
+    required: false,
+  },
+  phoneNo: {
+    type: Number,
+    required: false,
+  },
   token: {
     type: String,
   },
