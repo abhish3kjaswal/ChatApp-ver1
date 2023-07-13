@@ -45,10 +45,10 @@ const Form = ({ isSignInPage = false }) => {
     const resData = await res.json();
 
     if (res.status == 400) {
-      toast.success(resData.message);
+      toast.error(resData.message);
     }
     if (!isSignInPage) {
-      toast.error('User Registered');
+      toast.success('User Registered');
       navigate("/login");
       setData({
         ...(!isSignInPage && { fullName: "" }),

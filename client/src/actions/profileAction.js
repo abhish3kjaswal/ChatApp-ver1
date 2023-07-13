@@ -18,7 +18,6 @@ const profileAction = {
             }
         );
         let resp = await res.json()
-
         return dispatch({
             type: 'USER_DETAIL',
             payload: resp
