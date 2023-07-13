@@ -430,6 +430,6 @@ app.get("/api/users/:userId", async (req, res, next) => {
   }
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("listening at-->", port);
 });
