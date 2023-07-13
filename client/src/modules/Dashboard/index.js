@@ -315,14 +315,14 @@ const Dashboard = (props) => {
             className={
               "h-[75%] w-full " +
               (messages?.messages?.length || messages?.receiver?.fullName
-                ? "overflow-auto overscroll-auto overflow-x-hidden  shadow-sm"
+                ? "overflow-auto overscroll-auto overflow-x-hidden  shadow-sm mideSecBgP"
                 : "")
             }
           >
             {/*content messages */}
           {loading ?
             <Spinner />
-            : <div className="p-14">
+            : <div className="p-8" >
               {messages?.messages?.length ? (
                 messages?.messages.map(({ message, user: { id } = {} }, i) => {
                   return (
@@ -352,7 +352,7 @@ const Dashboard = (props) => {
             </div>}
           </div>
           {messages?.receiver?.fullName ? (
-            <div className="p-14 w-full flex items-center">
+            <div className="p-6 py-8 w-full flex items-center">
               <form onSubmit={sendMessage} className="flex items-center w-full">
                 <Input
                   placeholder="Type a mesaage"

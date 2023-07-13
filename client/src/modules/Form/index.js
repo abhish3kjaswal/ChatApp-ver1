@@ -87,13 +87,13 @@ const Form = ({ isSignInPage = false }) => {
   }, []);
 
   return (
-    <div className="bg-light h-screen flex justify-center items-center">
+    <div className="bg-light h-screen flex justify-center items-center mainPage">
       <ToastContainer />
       <div className="bg-white w-[600px] h-[800px] shadow-lg rounded-lg flex flex-col justify-center items-center">
         <div className="text-4xl font-extrabold">
           Welcome {isSignInPage && "Back"}
         </div>
-        <div className="text-xl font-light mb-14">
+        <div className="text-xl font-light mb-10">
           {isSignInPage
             ? "Log In now to get started"
             : "Sign up now to get started"}
@@ -127,14 +127,14 @@ const Form = ({ isSignInPage = false }) => {
             label="Password"
             name="password"
             placeholder="Enter your Password"
-            className="mb-14 w-[50%]"
+            className="mb-6 w-[50%]"
             type="password"
             value={data.password}
             onChange={handleInputs}
           />
           {!isSignInPage ? <>
             <div onChange={onChangeValue}
-              className="mb-6 w-[50%]"
+              className="mb-4 w-[50%]"
             >
               <label className="block mb-2 text-sm font-medium text-gray-800 dark:text-gray-300">Gender</label>
               <div className="radioBtnDiv">
@@ -164,7 +164,7 @@ const Form = ({ isSignInPage = false }) => {
               label="Phone No."
               name="phoneNo"
               placeholder="Enter your Phone No"
-              className="mb-6 w-[50%]"
+              className="mb-8 w-[50%]"
               value={data.phoneNo}
               onChange={handleInputs}
             />
