@@ -5,6 +5,8 @@ import Dashboard from "./modules/Dashboard";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Profile from "./modules/Profile/Profile";
+
 
 //protectedRoute function
 const ProtectedRoute = ({ children, auth = false }) => {
@@ -36,6 +38,14 @@ function App() {
             />
           </ProtectedRoute>
         }
+      />
+      <Route path='/profile' element={
+        <ProtectedRoute auth={true}>
+          <Profile
+            isLoggedIn={localStorage.getItem("user:token") !== null}
+          />
+        </ProtectedRoute>
+      }
       />
       <Route
         path="/login"

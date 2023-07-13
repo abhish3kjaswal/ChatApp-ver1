@@ -4,14 +4,20 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux'
 
 
 //socket io client library
 import { io } from "socket.io-client";
+// import { getUserID } from "../../actions/profileAction";
+import actions from "../../actions";
+
+const { profileAction } = actions
 
 const Dashboard = (props) => {
   const location = useLocation();
+  const dispatch = useDispatch()
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user:detail"))
   );
@@ -25,6 +31,9 @@ const Dashboard = (props) => {
   const [activeUsers, setActiveUsers] = useState([]);
   const [socket, setSocket] = useState(null);
   const messageRef = useRef(null);
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     //Socket
@@ -178,6 +187,14 @@ const Dashboard = (props) => {
     setTab(tab);
   };
 
+
+  const profileClick = (e) => {
+    e && e.preventDefault()
+    dispatch(profileAction.fetchUserDetails(user.id))
+    navigate('/profile')
+  }
+
+
   const convoUsers = conversations.map((c) => c.user?.id);
   convoUsers.push(user.id);
   const noConvoUsers = users.filter((u) => user.id !== u.id);
@@ -192,7 +209,9 @@ const Dashboard = (props) => {
       {/* left section */}
       <div className="w-[25%] h-screen bg-secondary overflow-auto overflow-x-hidden">
         <div className="flex items-center my-8 mx-8">
-          <div className="border border-primary p-[7px] rounded-full">
+          <div className="border border-primary p-[7px] rounded-full" onClick={e =>
+            profileClick(e)
+          }>
             <img src={userAvatar} width={60} height={60} />
           </div>
           <div className="ml-8">
@@ -389,7 +408,7 @@ const Dashboard = (props) => {
             }
             onClick={(e) => changeTab(e, "All")}
           >
-            Others
+            All Users
           </div>
           <div
             className={

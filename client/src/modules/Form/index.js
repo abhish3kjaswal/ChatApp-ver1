@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 const Form = ({ isSignInPage = false }) => {
   const [data, setData] = useState({
     ...(!isSignInPage && { fullName: "" }),
+    ...(!isSignInPage && { age: "" }),
+    ...(!isSignInPage && { gender: "" }),
+    ...(!isSignInPage && { phoneNo: "" }),
     email: "",
     password: "",
   });
@@ -39,12 +42,24 @@ const Form = ({ isSignInPage = false }) => {
       }
     );
 
-   
     const resData = await res.json();
 
     if (res.status == 400) {
-      toast.error(resData.message);
-    } else {
+      toast.success(resData.message);
+    }
+    if (!isSignInPage) {
+      toast.error('User Registered');
+      navigate("/login");
+      setData({
+        ...(!isSignInPage && { fullName: "" }),
+        ...(!isSignInPage && { age: "" }),
+        ...(!isSignInPage && { gender: "" }),
+        ...(!isSignInPage && { phoneNo: "" }),
+        email: "",
+        password: "",
+      })
+    }
+    else {
       if (resData.token) {
         localStorage.setItem("user:token", resData.token);
         localStorage.setItem("user:detail", JSON.stringify(resData.user));
@@ -91,6 +106,42 @@ const Form = ({ isSignInPage = false }) => {
           ) : (
             ""
           )}
+          {!isSignInPage ? (
+            <Input
+              label="Age"
+              name="age"
+              placeholder="Enter your Age"
+              className="mb-6 w-[50%]"
+              value={data.age}
+              onChange={handleInputs}
+            />
+          ) : (
+            ""
+          )}
+          {!isSignInPage ? (
+            <Input
+              label="Gender"
+              name="gender"
+              placeholder="Enter your gender"
+              className="mb-6 w-[50%]"
+              value={data.gender}
+              onChange={handleInputs}
+            />
+          ) : (
+            ""
+          )}
+          {!isSignInPage ? (
+            <Input
+              label="Phone No."
+              name="phoneNo"
+              placeholder="Enter your Phone No"
+              className="mb-6 w-[50%]"
+              value={data.phoneNo}
+              onChange={handleInputs}
+            />
+          ) : (
+            ""
+          )}
           <Input
             label="Email"
             name="email"
@@ -113,7 +164,7 @@ const Form = ({ isSignInPage = false }) => {
             label={isSignInPage ? "Log In" : "Sign up"}
             className="w-1/2 mb-2"
             type="submit"
-            // onClick={handleButton}
+          // onClick={handleButton}
           />
         </form>
         <div>
