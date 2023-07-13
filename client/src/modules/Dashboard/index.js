@@ -37,7 +37,7 @@ const Dashboard = (props) => {
 
   const navigate = useNavigate();
 
-
+  console.log("messages--->", messages)
   useEffect(() => {
     //Socket
     setSocket(io("http://localhost:8080"));
@@ -194,9 +194,9 @@ const Dashboard = (props) => {
   };
 
 
-  const profileClick = (e) => {
+  const profileClick = (e,id) => {
     e && e.preventDefault()
-    dispatch(profileAction.fetchUserDetails(user.id))
+    dispatch(profileAction.fetchUserDetails(id))
     navigate('/profile')
   }
 
@@ -216,7 +216,7 @@ const Dashboard = (props) => {
       <div className="w-[25%] h-screen bg-secondary overflow-auto overflow-x-hidden">
         <div className="flex items-center my-8 mx-8">
           <div className="border border-primary p-[7px] rounded-full" onClick={e =>
-            profileClick(e)
+            profileClick(e, user.id)
           }>
             <img src={userAvatar} width={60} height={60} />
           </div>
@@ -276,10 +276,10 @@ const Dashboard = (props) => {
       <div className="w-[50%] h-screen bg-white flex flex-col items-center shadow-sm">
           {messages?.receiver?.fullName ? (
             <div className="w-[75%] bg-secondary h-[80px] my-14 rounded-full flex items-center px-14 py-2 shadow-md">
-              <div className="border border-primary p-[5px] rounded-full cursor-pointer">
+            <div className="border border-primary p-[5px] rounded-full cursor-pointer" onClick={e => profileClick(e, messages?.receiver?.id)}>
                 <img src={userAvatar} width={40} height={40} />
               </div>
-              <div className="ml-6 mr-auto">
+              <div className="ml-6 mr-auto  cursor-pointer" onClick={e => profileClick(e, messages?.receiver?.id)}>
                 <h3 className="text-lg ">
                   {messages?.receiver?.fullName ? messages.receiver.fullName : ""}
                 </h3>

@@ -14,6 +14,10 @@ const profileReducer = (state = init, action) => {
             return { ...state, currentUserDetail: action.payload, loading: false }
         case 'LOADER':
             return { ...state, loading: action.payload, loading: false }
+
+            case 'CLEAR_USER_DETAILS':
+            return { ...state, currentUserDetail: {}, loading: false }
+            
         default:
             return state;
     }

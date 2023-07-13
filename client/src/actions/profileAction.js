@@ -22,6 +22,11 @@ const profileAction = {
             type: 'USER_DETAIL',
             payload: resp
         })
+    },
+    clearUserDetails: () => dispatch => {
+        return dispatch({
+            type: "CLEAR_USER_DETAILS"
+        })
     }
 
 }

@@ -17,6 +17,8 @@ const Form = ({ isSignInPage = false }) => {
     password: "",
   });
 
+  const [genderCheck, setGenderCheck] = useState('')
+
   const navigate = useNavigate();
 
   const handleInputs = (e) => {
@@ -38,7 +40,7 @@ const Form = ({ isSignInPage = false }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, gender: genderCheck }),
       }
     );
 
@@ -58,6 +60,7 @@ const Form = ({ isSignInPage = false }) => {
         email: "",
         password: "",
       })
+      setGenderCheck("")
     }
     else {
       if (resData.token) {
@@ -67,6 +70,11 @@ const Form = ({ isSignInPage = false }) => {
       }
     }
   };
+
+  const onChangeValue = (e) => {
+    setGenderCheck(e.target.value);
+    console.log(e.target.value);
+  }
 
   useEffect(() => {
     return () => {
@@ -106,42 +114,6 @@ const Form = ({ isSignInPage = false }) => {
           ) : (
             ""
           )}
-          {!isSignInPage ? (
-            <Input
-              label="Age"
-              name="age"
-              placeholder="Enter your Age"
-              className="mb-6 w-[50%]"
-              value={data.age}
-              onChange={handleInputs}
-            />
-          ) : (
-            ""
-          )}
-          {!isSignInPage ? (
-            <Input
-              label="Gender"
-              name="gender"
-              placeholder="Enter your gender"
-              className="mb-6 w-[50%]"
-              value={data.gender}
-              onChange={handleInputs}
-            />
-          ) : (
-            ""
-          )}
-          {!isSignInPage ? (
-            <Input
-              label="Phone No."
-              name="phoneNo"
-              placeholder="Enter your Phone No"
-              className="mb-6 w-[50%]"
-              value={data.phoneNo}
-              onChange={handleInputs}
-            />
-          ) : (
-            ""
-          )}
           <Input
             label="Email"
             name="email"
@@ -160,6 +132,45 @@ const Form = ({ isSignInPage = false }) => {
             value={data.password}
             onChange={handleInputs}
           />
+          {!isSignInPage ? <>
+            <div onChange={onChangeValue}
+              className="mb-6 w-[50%]"
+            >
+              <label className="block mb-2 text-sm font-medium text-gray-800 dark:text-gray-300">Gender</label>
+              <div className="radioBtnDiv">
+                <input type="radio" value="Male" name="gender" checked={genderCheck === "Male"} /> Male
+                <input type="radio" value="Female" name="gender" checked={genderCheck === "Female"} /> Female
+                <input type="radio" value="Other" name="gender" checked={genderCheck === "Other"} /> Other
+              </div>
+            </div>
+          </> : (
+            ""
+          )}
+          {!isSignInPage ? (
+            <Input
+              label="Age"
+              name="age"
+              placeholder="Enter your Age"
+              className="mb-6 w-[50%]"
+              value={data.age}
+              onChange={handleInputs}
+            />
+          ) : (
+            ""
+          )}
+
+          {!isSignInPage ? (
+            <Input
+              label="Phone No."
+              name="phoneNo"
+              placeholder="Enter your Phone No"
+              className="mb-6 w-[50%]"
+              value={data.phoneNo}
+              onChange={handleInputs}
+            />
+          ) : (
+            ""
+          )}
           <Button
             label={isSignInPage ? "Log In" : "Sign up"}
             className="w-1/2 mb-2"

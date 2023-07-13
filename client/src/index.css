@@ -93,3 +93,10 @@ code {
  display: grid;
  grid-template-columns: 1fr 1fr;
 }
+
+.radioBtnDiv{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 15px;
+}

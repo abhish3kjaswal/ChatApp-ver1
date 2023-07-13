@@ -2,21 +2,32 @@ import React, { useState } from 'react'
 import userAvatar from "../../assets/userAvatar.svg";
 import Button from '../../components/Button';
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import Spinner from '../../components/Button/Spinner/spinner';
+import actions from '../../actions';
 
+
+const { profileAction } = actions
 
 const Profile = (props) => {
     const navigate = useNavigate();
     const state = useSelector(state => state.profileReducer)
     const s = useSelector(state => state)
+    const dispatch = useDispatch()
 
 
     const [profile, setProfile] = useState(state.currentUserDetail || {})
     const [loading, setLoading] = useState(state.loading || false)
 
-    console.log("STATE->", s)
     console.log("loading->", loading)
+
+    const goBack = (e) => {
+        e && e.preventDefault()
+        dispatch(profileAction.clearUserDetails())
+        navigate(`/`)
+    }
+    console.log("STATE->", s)
+
     return (
         <div className='profileMainDiv'>
             <div className='picSection'>
@@ -39,8 +50,7 @@ const Profile = (props) => {
                 <div className='btnSection'>
                     <Button
                         // className="text-xs text-black-500 w-auto ml-10  bg-transparent hover:bg-black-500 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded logOutBtn"
-                        onClick={(e) => navigate(`/`)
-                        }
+                        onClick={(e) => goBack(e)}
                         label={"Back"}
                     ></Button>
                     {/* <Button
