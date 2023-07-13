@@ -40,7 +40,7 @@ const Dashboard = (props) => {
   console.log("messages--->", messages)
   useEffect(() => {
     //Socket
-    setSocket(io(`${process.env.REACT_SOCKET_URL}`));
+    setSocket(io(`${process.env.REACT_SOCKET_BACKEND_URL}`));
   }, []);
 
 
