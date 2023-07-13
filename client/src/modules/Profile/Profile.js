@@ -30,7 +30,7 @@ const Profile = (props) => {
 
     return (
         <div className='profileMainDiv'>
-            <div className='picSection'>
+            <div className='picSection cursor-pointer'>
                 <img src={userAvatar} width={60} height={60} className='imgAvtr' />
             </div>
             <div className='blackLine'></div>

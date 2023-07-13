@@ -40,7 +40,7 @@ const Dashboard = (props) => {
   console.log("messages--->", messages)
   useEffect(() => {
     //Socket
-    setSocket(io("http://localhost:8080"));
+    setSocket(io(`${process.env.REACT_APP_API_URL}`));
   }, []);
 
 
@@ -215,7 +215,7 @@ const Dashboard = (props) => {
       {/* left section */}
       <div className="w-[25%] h-screen bg-secondary overflow-auto overflow-x-hidden">
         <div className="flex items-center my-8 mx-8">
-          <div className="border border-primary p-[7px] rounded-full" onClick={e =>
+          <div className="border border-primary p-[7px] rounded-full cursor-pointer" onClick={e =>
             profileClick(e, user.id)
           }>
             <img src={userAvatar} width={60} height={60} />
