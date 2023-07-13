@@ -4,15 +4,17 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const app = express();
 
-const io = require("socket.io")(8080, {
+const server = require('http').createServer(app)
+
+const io = require("socket.io")(server, {
   cors: {
     origin: process.env.REACT_SOCKET_URL || "http://localhost:3000",
     // origin: "http://localhost:3000",
   },
 });
 
-const app = express();
 
 //importing files
 const connectDB = require("./connect");
@@ -68,9 +70,9 @@ io.on("connection", (socket) => {
             user: { id: user._id, fullName: user.fullName, email: user.email },
           });
       }
-      else{
+      else {
         // socket.emit('addUser',receiverId)
-        
+
         // 1 way to do this--->
         // const user = { userId:receiverId, socketId: socket.id };
         // users.push(user);
@@ -79,7 +81,7 @@ io.on("connection", (socket) => {
 
         // const receiver = users.find((u) => u.userId === receiverId);
         // const newUser = await Users.findById(senderId);
-        
+
         // io.to(receiver.socketId)
         // .to(socket.id)
         // .emit("getMessage", {
@@ -381,12 +383,12 @@ app.get("/api/messages/:conversationId", async (req, res, next) => {
         //when user is not there in my chats
         return res.status(200).json([]);
       }
-  }
-  else{
-    //when user is there in my chats
-    checkMessages(conversationId);
-  }
-    
+    }
+    else {
+      //when user is there in my chats
+      checkMessages(conversationId);
+    }
+
   } catch (error) {
     console.log("Err 6-->", error);
   }
@@ -418,11 +420,11 @@ app.get("/api/users/:userId", async (req, res, next) => {
     const userData = await Users.findOne({ _id: userId })
 
     console.log(userData)
-    
+
     // const users = await Users.find();
     // const usersData = []
-    const { fullName, email,age,gender,phoneNo } = userData
-    res.status(200).json({fullName, email,age,gender,phoneNo});
+    const { fullName, email, age, gender, phoneNo } = userData
+    res.status(200).json({ fullName, email, age, gender, phoneNo });
   } catch (error) {
     console.log("Err->", error);
   }
