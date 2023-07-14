@@ -226,8 +226,15 @@ const Dashboard = (props) => {
                 {user && user.fullName ? user.fullName : ""}
               </h3>
               <Button
+                className="text-blue-600 text-xs w-auto ml-8 bg-transparent hover:bg-blue-500 font-semibold hover:text-white py-1 px-1.5 border border-blue-500 hover:border-transparent rounded"
+                onClick={(e) => {
+                  profileClick(e, user.id)
+                }}
+                label={"Profile"}
+              ></Button>
+              <Button
                 // className="text-3xl font-light"
-                className="text-xs text-red-500 w-auto ml-10  bg-transparent hover:bg-red-500 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded logOutBtn"
+                className="text-red-600 text-xs w-auto ml-5 bg-transparent hover:bg-red-500 font-semibold hover:text-white py-1 px-1.5 border border-red-500 hover:border-transparent rounded "
                 onClick={(e) => {
                   localStorage.removeItem("user:token");
                   window.location.reload(true);

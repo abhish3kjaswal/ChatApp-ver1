@@ -21,7 +21,11 @@ code {
 }
 
 .logOutBtn{
-  color: black;
+  color: red;
+}
+.profileBtn{
+  color: blue;
+  
 }
 
 .mainPage{
