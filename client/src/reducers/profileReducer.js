@@ -1,7 +1,8 @@
 const init = {
     currentUserId: null,
     currentUserDetail: {},
-    loading: true
+    loading: true,
+    imgModalCheck: false
 }
 
 const profileReducer = (state = init, action) => {
@@ -14,10 +15,11 @@ const profileReducer = (state = init, action) => {
             return { ...state, currentUserDetail: action.payload, loading: false }
         case 'LOADER':
             return { ...state, loading: action.payload, loading: false }
-
-            case 'CLEAR_USER_DETAILS':
+        case 'CLEAR_USER_DETAILS':
             return { ...state, currentUserDetail: {}, loading: false }
-            
+        case 'SET_IMG_MODAL':
+            return { ...state, imgModalCheck:action.payload , loading: false }
+
         default:
             return state;
     }

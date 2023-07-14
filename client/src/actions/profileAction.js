@@ -27,6 +27,12 @@ const profileAction = {
         return dispatch({
             type: "CLEAR_USER_DETAILS"
         })
+    },
+    setModalCheck: (val) => dispatch => {
+        return dispatch({
+            type: "SET_IMG_MODAL",
+            payload: val
+        })
     }
 
 }
