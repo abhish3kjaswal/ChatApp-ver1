@@ -33,6 +33,23 @@ const profileAction = {
             type: "SET_IMG_MODAL",
             payload: val
         })
+    },
+    uploadProfileImage: (data, id) => async (dispatch) => {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/pic/${id}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+      
+          const resData = await res.json();
+          console.log("RESDATA-->",resData)
+
+        // return dispatch({
+        //     type: 'USER_IMAGE_ADDED',
+        //     payload: resData
+        // })
     }
 
 }

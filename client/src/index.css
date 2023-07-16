@@ -71,6 +71,7 @@ code {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  /* margin-top: 5px; */
 }
 
 
@@ -86,15 +87,18 @@ code {
 }
 
 .imgAvtr {
-  /* border: 2px solid yellow; */
+  /* border: 1px solid black; */
   width: 85%;
   height: 85%;
+  margin-top: 10px;
 }
 
 .editIcon {
   /* border: 2px solid green; */
 
   align-self: flex-end;
+  width: 35px;
+  height: 35px;
 }
 
 .btnSection {
