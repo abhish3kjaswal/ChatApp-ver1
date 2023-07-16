@@ -15,8 +15,9 @@ const Profile = (props) => {
     const dispatch = useDispatch()
 
 
-    const [profile, setProfile] = useState(state.currentUserDetail || {})
     const [loading, setLoading] = useState(state.loading || false)
+    const [image, setImage] = useState('')
+    const [previewImage, setPreviewImage] = useState(null)
 
 
     console.log("loading->", loading)
@@ -33,6 +34,44 @@ const Profile = (props) => {
         console.log("EDIT IMG")
         dispatch(profileAction.setModalCheck(true))
     }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0]
+        console.log("CHANGE--->")
+        console.log("File-", file)
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+                console.log("Image-->", image)
+                setPreviewImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+        else {
+            setPreviewImage(null)
+        }
+    };
+
+    const uploadProfilePic = (e) => {
+        e && e.preventDefault()
+
+        let data = {
+            image
+        }
+        console.log("Data-->", data)
+    }
+
+    const clearState=(e)=>{
+        e && e.preventDefault()
+        console.log("Clear state")
+        setImage('')
+        setPreviewImage(null)
+
+        // var controlImg=$("#controlImg");
+        document.getElementById('controlImg').value = "";
+    }
+
 
     return <>
         <div className='profileMainDiv'>
@@ -76,7 +115,7 @@ const Profile = (props) => {
                 </div>
             </div>
         </div>
-        <ImageUploadModal flag={state.imgModalCheck}/>
+        <ImageUploadModal flag={state.imgModalCheck} handleFileChange={handleFileChange} previewImage={previewImage} uploadProfilePic={uploadProfilePic} clearState={clearState}/>
     </>
 
 
@@ -89,14 +128,19 @@ const ImageUploadModal = (props) => {
         <div className='imageModalContent'>
             <div className='topCon'>
                 Upload Profile Image
-                <button onClick={() =>
-                    dispatch(profileAction.setModalCheck(false))
+                <button onClick={() => {
+                    props.clearState();
+                   return dispatch(profileAction.setModalCheck(false))
+                }
                 } label='X' className='crossBTN'>X</button>
             </div>
             <hr></hr>
+            {props.previewImage ? <div className='previewImg'>
+                <img src={props.previewImage} className='profImg' alt='currentProfilePic' />
+            </div> : ''}
             <div className='bottomCon'>
-                <input type='file' />
-                <Button label='Upload' onClick={() => { }} className='contentBTN'/>
+                <input id='controlImg' type='file' onChange={props.handleFileChange} />
+                <Button label='Upload' onClick={props.uploadProfilePic} className='contentBTN' />
             </div>
         </div>
     </div>
