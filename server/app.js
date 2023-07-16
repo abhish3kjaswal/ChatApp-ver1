@@ -5,6 +5,12 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
+const uploadImg = require('./utils/uploadImg');
+
+const cloudinary = require('cloudinary')
+const { v4: uuidv4 } = require('uuid');
+
+uploadImg
 
 const server = require('http').createServer(app)
 
@@ -31,6 +37,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 let port = process.env.PORT || 9000;
 
+
+//cloudinary initialisation
+
+cloudinary.config({
+  cloud_name: 'mylibrary12345',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 //Socket setup
 let users = [];
@@ -423,10 +437,43 @@ app.get("/api/users/:userId", async (req, res, next) => {
 
     // const users = await Users.find();
     // const usersData = []
-    const { fullName, email, age, gender, phoneNo } = userData
-    res.status(200).json({ fullName, email, age, gender, phoneNo });
+    const { fullName, email, age, gender, phoneNo, _id,imageUrl } = userData
+    res.status(200).json({ fullName, email, age, gender, phoneNo, id: _id,imageUrl });
   } catch (error) {
     console.log("Err->", error);
+  }
+});
+
+//update user profile Pic
+app.post("/api/users/pic/:userId", async (req, res, next) => {
+  try {
+    const { imageUrl } = req.body;
+    const userId = req.params.userId;
+
+    if (!imageUrl) {
+      res.status(400).json({ message: "Please Atleast upload 1 image" });
+    }
+    else {
+      const imgId = uuidv4().split('-')[0];
+      const imageURL = await uploadImg(imageUrl, imgId)
+
+      console.log("URL--->",imageURL.secure_url)
+
+      if (typeof imageURL.secure_url != 'string') {
+        res.status(500).json({ error: 'Unknown error' })
+      }
+      if (userId) {
+        let user = await Users.findOne({ _id: userId });
+        user.imageUrl = imageURL.secure_url
+        let resp = await user.save();
+
+        return res.status(200).json(resp)
+      }
+      res.status(401).json({ error: 'request not allowed' })
+
+    }
+  } catch (error) {
+    console.log("Err 5-->", error);
   }
 });
 

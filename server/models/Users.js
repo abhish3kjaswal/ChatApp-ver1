@@ -26,6 +26,10 @@ const userSchema = mongoose.Schema({
     type: Number,
     required: false,
   },
+  imageUrl: {
+    type: String,
+    required: false,
+  },
   token: {
     type: String,
   },
